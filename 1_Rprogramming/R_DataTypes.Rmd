@@ -1,0 +1,458 @@
+---
+title: "Introduction to R"
+author: "Vamshidhar Gangu"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::html_clean:
+    highlight: kate
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+suppressMessages(library(knitr))
+suppressPackageStartupMessages(library(rmdformats))
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+# R Environment
+
+### Working Directory
+
+R typically needs a folder to store data, script and any generated plots. it also saves the history and environment by default in this **working directory**. You can get and set the working directory using `getcwd()` and `setwd()`.
+
+
+
+### Create a new RStudio project
+
+You can check [here](https://bookdown.org/ndphillips/YaRrr/projects-in-rstudio.html) for Manging projects in RStudio
+
+# R Basics
+
+## Objects & Functions
+
+Almost everything in R is of two things, either an object or functions. An object can be a number, a dataset, a summary statistic like a mean or statistical test. 
+
+R object types
+ 
+* __Scalars__ : just a single value like number/character
+* __Vectors__ : collection of several scalars stored in a single object
+* __Factors__ : Special type of vector used for storing categorical data and their levels
+* __Lists__ : where vectors always have to contain the same type of data, a __list__ can combine just about any set of objects
+* __Matrix__: contains of vectors arranged in a 2 dimensional rectangular layout. All elements have to be of the same data type (mostly numeric)
+* __DataFrames__: most common format in R. it is used to store tabular data objects like spreadsheet. can contain different types of data
+
+
+### Scalars
+
+It is the simplest object type in R. It takes a single value like number/string
+```{r}
+# numeric scalars
+a <- 10
+b <- 3/100
+c <- (a+b)/b
+mode(c)
+
+# character scalars 
+
+myname <- "vamshi"
+message <- 'Welcome to R course'
+class(myname)
+
+# numeric to char conv
+a_char <- as.character(a)
+
+# char to numeric conv
+myname_num <- as.numeric(myname)
+print(myname_num)
+n = as.numeric(a_char)
+print(n)
+
+```
+### Vectors
+
+A vector is just a combination of several scalars stores in a single object. Like scalars, they can be either numeric or character but not both.
+
+```{r}
+
+# creating vectos using different functions
+
+## using c() 
+arr_num <- c(1,20,4,8,902)
+arr_chr <- c('vamshi','nusit','nus')
+
+# using range
+arr_num_range <- 10:20
+arr_chr_range <- letters[1:10]
+
+#using other methods
+arr_num_seq <- seq(10,50,2)
+print(arr_num_seq)
+arr_num_sample <- sample(1:1000, 20) # replace = TRUE
+print(arr_num_sample)
+arr_num_rep <- rep(c(1,2), times=2, each=3)
+print(arr_num_rep)
+
+
+# calculate the length of the vector
+length(arr_num_sample)
+# indexing the vector
+print(arr_num_sample[3])
+
+# calculate the mean of sample_num object using mean() function
+m <- mean(arr_num_sample)
+sprintf("Mean of Sample_num is :%.3f", m)
+
+```
+
+### Factors
+
+A special type of vector used for saving categorical data along with its levels. Can store both strings and numerics. 
+```{r}
+# create a vector 
+zones <- rep(c('east','west','north'), times=3, each=2)
+print(zones)
+print(is.factor(zones))
+
+# converting a vector to factor 
+zones_fac <- factor(zones)
+print(zones_fac)
+print(is.factor(zones_fac))
+
+# create factor from scratch
+fac_var <-  factor(c('male','female','female','male','male','female'), levels = c('male','female'))
+print(fac_var)
+```
+
+While creating a data frame, R treats all string columns as categorical data and creates factors on it. 
+
+
+### Lists
+
+While vectors always have to contain the same type of data. a __list__ can combine just about any set of objects. It is used to store complicated objects. 
+```{r}
+# create few vectors
+
+names <- c('alex','sam','vijay','kumar')
+ages <- c(50,12,14,35,20)
+place <- 'Singapore'
+
+# make a list using the above three vectors
+emp <- list(names, ages, place)
+print(emp)
+print(length(emp))
+
+## Indexing the list
+emp[[1]]
+emp[[1]][2]
+
+```
+
+### Matrix
+
+A __matrix__ consists of rows and columns with all the elements of same data type. Though we can create a matrix with only characters or logical values, they are not of much use. Mostly they are used with numeric elements for mathematical caluclations. it is created using `matrix()` function.
+```{r}
+# create a 3x3 matrix
+mat_var <- matrix(1:9, byrow = TRUE, nrow = 3)
+class(mat_var)
+
+# to find the matrix dimension
+dim(mat_var)
+nrow(mat_var)
+ncol(mat_var)
+
+# set column names
+colnames(mat_var) <- c('c1','c2','c3')
+print(mat_var)
+
+# creating a matrix from vectors using cbind (rbind can also be used)
+m2 <- as.matrix(cbind(1:4, 5:8, 9:12))
+print(m2)
+
+# indexing the matrix
+m2[1,2] # for slicing 1,2 element => 5
+m2[1,] # for 1st row completely
+m2[,2] # for selecting 2nd column
+m2[-1,] # slect all rows except first
+
+```
+
+
+### Dataframes
+
+__Data frames__ are the most common format used in R. Similar to pandas dataframe in Python. This is essentially same like a matrix but can contain different types of data. You can create a new dataframe/combine many vectors into a dataframe using `data.frame()` function. A matrix can be converted to dataframe using `as.data.frame()` function
+
+```{r}
+# create some data
+name <- c('Susan','Jake','John','Ben','Jennifer')
+age <- c(25,20,28,21,20)
+gender <- c('F','M','M','M','F')
+place <- c('NewYork','Boston','Washington DC','Las Vegas', 'Chicago')
+can_play <- c(TRUE, FALSE, FALSE, TRUE, FALSE)
+
+students <- data.frame(name, age, gender, place, can_play)
+print(students)
+
+
+# check the class of string column
+print(students$name)
+print(students$place)
+print(students$gender)
+
+# we convert the name and place to character vector from factor.
+students$name <- as.character(students$name)
+students$place <- as.character(students$place)
+
+print(students$name)
+print(students$place)
+print(students)
+```
+
+#### Some functions on matrix and dataframe
+
+```{r}
+# view top two lines
+head(students, n=2)
+
+# view the bottom lines
+tail(students)
+
+#get the dataframe summary
+summary(students)
+
+# preview the data
+str(students)
+
+# get varaible names
+names(students)
+
+# get number of rows
+nrow(students)
+
+# get number of cols
+ncol(students)
+```
+
+#### Indexing the data frame
+
+You can use the index notation: `data_frame[row_number, column_number]` or use the `$` operator to get individual varaibles within dataframe
+
+```{r}
+# get the first row
+students[1,]
+
+# get the third column
+students[,3]
+
+# get seconf data item in third row
+students[3,2]
+
+# get the gender variable
+students$gender
+```
+
+#### Some commonly used functions
+
+__`cut`__: for grouping continous varibles 
+
+```{r}
+# splitting the students age to 2 groups
+students$agegroup <- cut(students$age, 2, include.lowest=T)
+print(students)
+levels(students$agegroup)
+```
+
+`table`: for frequency table
+
+```{r}
+table(students$can_play)
+
+# to express as fractions
+prop.table(table(students$can_play))
+```
+`asDate`: Data variable
+```{r}
+as.Date(c("2007-06-22", "2004-02-12"))
+
+as.Date(c("22/6/2007","13/2/2004"), format="%d/%m/%Y")
+```
+
+
+#### Missing Values
+
+Missing values are denoted by NA or NaN 
+- `is.na()` is used to test objects if they are NA
+- `is.nan()` is used to test for NaN
+- NA contains class types, like integer NA, character NA etc
+- A NaN values is also NA but the converse is not true
+- should be careful when combining missing values with logical expressions
+```{r}
+x <- c(1,2, NA, 10, 3)
+is.na(x)
+is.nan(x)
+
+y <- c(1,2,NaN, NA, 4)
+is.na(y)
+is.nan(y)
+
+```
+
+removing missing values
+
+```{r}
+x[!is.na(x)]
+
+# replace all missing values to 0
+y[is.na(y)] <- 0
+```
+
+subsetting the dataframe with no missing values
+
+```{r}
+# removing missing values in data frame
+students$marks <- c(99,80,NaN,100,NA)
+print(students)
+good <- students[complete.cases(students),]
+print(good)
+```
+
+
+## Operators and Loops 
+
+### Basic Operators
+
+- Arithmetic : `+` `-` `*` `/` `^ or **`
+- Logical: `<` `<=` `>` `>=` `==` `!=` `|` `&`
+
+
+### Looping in R
+
+#### `for` loops
+
+example: count number of even numbers in a vector
+
+```{r}
+
+x <- 1:14
+count <-0
+for(i in x){
+  if (i %% 2 ==0){
+    count <- count +1
+  }
+}
+print(count)
+```
+
+
+### `while` loops
+```{r}
+count <- 0
+i<-1
+while(i<= length(x)){
+  if(x[i] %% 2==0){
+    count <- count +1
+  }
+  i <- i+1
+}
+print(count)
+```
+
+
+### `repeat` loops
+```{r}
+i <- 1
+count <- 0
+repeat{
+  if(x[i] %%2 ==0){
+    count <- count + 1
+  }
+  i <- i + 1
+  if(i > length(x)){
+    break
+  }
+}
+print(count)
+```
+
+## Readind data in R
+
+Loading data into R might be frustation. R provides a seperate function to read almost every single type of file and can be confusing some times. 
+
+ - tab-delimted (.txt) : `read.table()`
+ - csv : `read.csv()`, `read.csv2()`
+ - custom delimiter: `read.delim()`
+ - excel files: `read_excel` from `readxl` package
+ - json files: `fromJSON` from `rjson` package
+ - xml files: `XML` package
+ - log files: `read_log()`
+ - FWF files: `read_fwf()`
+ 
+ 
+### download data from web
+ 
+User can download directly from web using `RCurl` pacakage 
+ 
+```{r}
+
+library(RCurl)
+url_file <- "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/iris.csv"
+download.file(url_file, destfile = "iris.csv")
+iris <- read.csv("iris.csv")
+head(iris)
+```
+
+Most of the functions has ability to read directly from the web
+```{r}
+# Read a text file from the web
+fromweb <- read.table(file = url_file,
+                      sep = ',',
+                      header = TRUE)
+head(fromweb)
+```
+
+## Saving to files
+
+Similar to read functions, there is a seperate function for writing every single type of file. MOre help can be found [here](http://www.sthda.com/english/wiki/exporting-data-from-r)
+
+- `write.table()`, `write.csv()`, `write.delim()`
+
+## Saving R environment
+
+You can save the R objecta as `.RData` files. They are specific to R and can store as many objects as you'd like within a single file.
+
+`ls()` is used to list all the variables within R environment
+
+```{r}
+ls()
+```
+
+Now we save few objects into a `.RData` object
+
+```{r}
+save(zones, students, emp, file="data_frames.RData")
+```
+
+to save all variables within a environment, use `save.image()`
+
+```{r}
+save.image(file="allenv.RData")
+```
+
+you can load the saved `.RData` using `load()` function. `rm()` is used to delete the r objects from the environment.
+
+
+# To learn
+
+learn about different apply functions within R
+
+`apply`, `lapply`, `sapply`
+
