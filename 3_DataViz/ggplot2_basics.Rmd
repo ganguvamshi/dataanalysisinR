@@ -1,0 +1,221 @@
+---
+title: "ggplot2"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::html_clean:
+    highlight: kate
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+
+## R graphics system
+
+There exists different graphic packages in R for data viz.
+
+1) R base graphics
+2) Lattice Graphics (`lattice`)
+3) ggplot2 
+
+### R base graphics
+
+The base R comes with simple functions to create many plots
+
+- scatter plot : `plot()`
+- scatter plot matrix: `pairs()`
+- box plot: `boxplot()`
+- strip chart: `stripchart()`
+- histogram: `hist()`
+- density plot: `density()`
+- bar plot: `barplot()`
+- line plot: `plot()` and `line()`
+- add text to plot: `text()`
+
+some commonly used arguments for plor customization
+- _pch_: point shape
+- _cex_: point size
+- _col_: point color
+- _main_, _xlab_, _ylab_: main title, x/y axis labels
+- _labs_: axis text, las=2 (for vertical text)
+
+## ggplot2
+
+`ggplot2` is a popular package for data visualization in R
+
+from [home page](http://ggplot2.tidyverse.org/)
+```
+ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details
+```
+
+### how ggplot2 works
+
+The three essential components
+
+1. data: the dataset consists of variables that we use for plot
+2. geom: the type of graphics ex: points/lines/bars etc
+3. aes: aesthetic attributes of geom object. ex. x/y position, color, shape and size
+
+### gapminder example
+
+the global economic, heath and development data from the website [gapminder.org](http://www.gapminder.org/tools/#_locale_id=en;&chart-type=bubbles). For each of 142 countries, the package provides values for life expectancy, GDP per capita, and population, every five years, from 1952 to 2007
+
+```{r}
+if(!is.element('gapminder', installed.packages()[,1])){
+  install.packages('gapminder')
+}
+library(tidyverse)
+library(gapminder)
+glimpse(gapminder)
+```
+
+we want to look at trends over time by `continent`. 
+
+__Excercise 1__
+check how many countries exists in this dataset in each continent
+
+```{r}
+summary(gapminder)
+# answer here
+```
+
+### bar plot 
+often used to visualise the distribution of discrete variables like continent
+
+```{r}
+# tell which data to use
+p <- ggplot(data = gapminder)
+
+```
+now we need to tell it which variables in the data should be represented by which visual elements in the plot. mappings are specifed using `aes()` function
+
+```{r}
+p + aes(x=continent, fill=continent) + geom_bar()
+
+```
+
+next we ..
+- use `geom_bar` to tranform the axis, so it represents the number of countries
+- add y axis label
+- supress the legend
+
+```{r}
+ggplot(gapminder, aes(x=continent, fill=continent)) + 
+  geom_bar(aes(y=..count../12))+
+  labs(y='#countries') +
+  guides(fill=FALSE)
+```
+
+we canto plot Life expectancy against per capita GDP for all country-years 
+
+```{r}
+p <- ggplot(data=gapminder, aes(x = gdpPercap, y = lifeExp))
+
+```
+what happens when you just type p
+
+```{r}
+p
+```
+
+the `p` object has been created by ggplot() along with the mapping information. however since no instructions on what sort of plot to draw is givem, it return an empty plot. 
+Now we draw a scatter plot using this.
+
+```{r}
+p + geom_point()
+```
+
+plotting a fitted curve using `geom_smooth()`
+
+```{r}
+p + geom_smooth()
+```
+
+we see that some of the geoms do lot more than simply put points on grid. the `geom_smooth()` has calculated a smoothed line and shaded in a ribbon showing the standard error of line. we can plot both scatter and smmoth together by just adding them as layers
+
+```{r}
+p + geom_point() + geom_smooth()
+
+```
+
+by default, the `geom_smooth()` use `gam` (generalized additive model). we can try adding other methods as an argument to geom_smooth()
+
+```{r}
+p + geom_point() + geom_smooth(method="lm")
+
+# we change it to use linear model
+```
+
+In our plot, the data is quite bunched up against the left side. Gross Domestic Product per capita is not normally distributed across our country years. The x-axis scale would probably look better if it were transformed from a linear scale to a log scale
+
+```{r}
+
+p + geom_point() +
+    geom_smooth(method = "gam") +
+    scale_x_log10()
+
+```
+__faceting__
+
+facets display subsets of data in different panels. `facet_wrap()` tries to sensibly wrap a series of facets into a 2 dimensional grid. 
+
+```{r}
+p + geom_point() + facet_wrap(~continent)
+p + geom_point() + facet_wrap(~continent, ncol=1)
+```
+
+let's do polishing with nicer axis labels and a title. we want to replace the scientific notation of x-ais with the dollar value it actually represents. the labels on the tic-marks can be controleed through `scale_` functions. we shall make use of `scales` library that contains some useful pre-made formatting functions. here we use `dollar()` function
+
+```{r}
+if(!is.element("scales", installed.packages()[,1])){
+  install.packages('scales')
+}
+p + geom_point() +
+    geom_smooth(method="gam")+
+    scale_x_log10(labels= scales::dollar)
+```
+
+aesthetics can be mapped per geom. 
+
+```{r}
+p + geom_point(aes(color = continent)) +
+    geom_smooth(method="loess") +
+    scale_x_log10(labels = scales::dollar)
+```
+
+### saving plots
+
+you will often need to save your figures individually as they will end up being used in slides/published papers. in ggplot, the easiest way is to use `ggsave()` function.
+
+```{r}
+ggsave(filename="my_plot.png")
+```
+
+we can also save the plot objects directly. to choose other format simply change the extension
+
+```{r}
+plt <-  p + geom_point() + geom_smooth(method="loess") + scale_x_log10()
+ggsave("my_plot.pdf", plot =plt)
+```
+
+
+
+## resources
+
+http://www.sthda.com/english/wiki/be-awesome-in-ggplot2-a-practical-guide-to-be-highly-effective-r-software-and-data-visualization#qplot-quick-plot-with-ggplot2
+
+https://rkabacoff.github.io/datavis/

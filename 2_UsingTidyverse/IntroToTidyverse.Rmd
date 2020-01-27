@@ -1,0 +1,262 @@
+---
+title: "Introduction to Tidyverse"
+author: "Vamshidhar Gangu"
+date: "`r Sys.Date()`"
+credits: "Most of the code snippets are from R for Datascience book"
+output:
+  rmdformats::html_clean:
+    highlight: kate
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+suppressMessages(library(knitr))
+suppressPackageStartupMessages(library(rmdformats))
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+## Getting started 
+
+The `tidyverse` is a collection of essential R packages for data science. They are quite helpful in performing most of the tedious steps of a data science project like subsetting, transforming, visualization etc
+
+Tidyverse was created by Hadley Wickham and his team wih the aim of providing all the utilites to clean and work with data.
+
+### "tidy" data
+
+"Tidy data" describes a standardized approach for structuring datasets to make the downstream analyses and visualizations easy. 
+
+the tidy data principles:
+
+- Variables are "columns"
+- Observations are "rows"
+- Values go into the cells
+
+
+### pipe "%>%"
+
+part of `magrittr` package. helps to do perform many functions at the same time. the pipe makes your code read more like a sentence. 
+
+Typical R style for select and filter would be 
+
+```
+data2 <- filter(data, department=="Computer Science")
+data2_pass <-  select (data2, Marks, Country, is_pass)
+```
+can do nested as well:
+```
+data2_pass <- select(filter(data, department="Computer Science"), Marks, Country, is_pass)
+```
+
+No wrong with this but it may clutter your workspace with lots of intermediate objects. With many of these intermediate steps, it can be hard to keep track of
+
+with pipes:
+
+```
+
+data2_pass <- data %>%
+                filter(department=="Computer Science") %>%
+                select(Marks, Country, is_pass)
+```
+
+
+## Tidyverse Core Packages
+
+tidyverse can be installed direction within RStudio
+
+```
+install.packages("tidyverse")
+```
+
+The core packages includes in tidyverse:
+
+- `readr`: fast and friendly way to read rectangular data
+- `tidyr`: provides fundamental functions for data tidying
+- `dplyr`: grammar for data manipulation
+- `tibble`: modern data frame
+- `stringr`: cohesive set of functions for string manipulation
+- `forcats`: provides tools that solve common problems with factors
+- `purrr`: provides tools to apply functional programming on datasets
+- `ggplot2`: grammar of Graphics. 
+
+
+In this part, we cover the two main core packages `tidyr` and `dplyr`
+
+### dplyr 
+
+gives collections of "verbs" for manipulating data frames. Each verb takes a data frame and returns a modified version of it. the idead is that complex operations can be performed by stringing together a seried of simplier operations in a pipeline
+
+#### dyplr basics
+
+the key dplyr functions:
+
+- `filter` - filter rows by criteria
+- `arrange` - arrange your column data (asc/desc) order
+- `select` - select columns, used commonly with `starts_with`
+- `mutate` - create new cols by preserving the exising variables
+- `summarise` - summarize any of these functions
+- `group_by` - groub different observations together and apply functions on the grouped dataset
+- `join` - perform left, right, full and inner joins (similar to SQL)
+
+#### nycflights example
+
+use data from nycflights13 package, the flights table contains ~336K flights departed from new york city in 2013. The data comes from US Bureau of Transportation Statistics, and is documented in `?flights`
+
+`flights`: flights data
+`airlines`: airline data
+`airports`: airport metadata
+`planes`: plane metadata
+`weather`: hourly weather data
+
+
+```{r}
+if(!is.element('nycflights13', installed.packages()[,1])){
+  install.packages("nycflights13")
+}
+library("nycflights13")
+library("tidyverse")
+```
+
+check the table input
+```{r}
+flights
+```
+##### select 
+
+`select()` is used to choose a useful subset of data based on the names of the variable
+
+```{r}
+# select by name
+flights %>% select(year, month, day)
+
+# select using name range
+select(flights, year:day)
+
+# reverse select
+select(flights, -(year:day))
+
+```
+other helper functions, commonly used with select
+
+`starts_with("abc")`: to select column names starting with "abc"
+`ends_with('xyz')`: matches names that ends with 'xyz' 
+`contains('ijk')`: matches names that contain 'ijk'
+
+see `?select` for more details
+
+
+##### filter rows
+
+`filter` is used to subset the data based on the condition over a column variable. Here we select all flights on Jan 1st
+
+```{r}
+jan1 <- flights %>% filter(month==1, day==1)
+(dec10 <- filter(flights, month==12, day==10))
+```
+
+you can use standard suite of comparison operators, `>`, `>=`, `<`, `<=`, `!=`, `==`
+
+```{r}
+last2months <- filter(flights, month==11|month==12)
+#you can use %in% for this
+filter(flights, month %in% c(11,12))
+```
+
+__Excercise 1__
+
+Q: Find flights that 
+- had an arrival delay of two or more hours
+- were operated by United, American or Delta
+
+#### arrange rows
+
+`arrange()` is used to arrange the rows based on their order. it takes a dataframe and column names to be sorted. 
+
+```{r}
+flights %>% arrange(year, month, desc(day))
+```
+Note: Missing Values (NA/NaN) are always sorted at the end
+
+
+```{r}
+df <- tibble(x = c(5, 2, NA))
+arrange(df, x)
+arrange(df, desc(x))
+```
+
+__Excercise 2__
+
+Q: select carrier and dep_delay columns from flights and sort by dep_delay
+
+##### grouped summaries
+
+`group_by()` changes the unit of analysis from complete dataset to individual groups. summary() is often used along with group_by to get grouped summaries
+
+Here, we calulate the mean arraival and departure delays at different origin airports 
+
+```{r}
+flights %>%
+    group_by(origin) %>%
+    summarise_each(funs(mean(., na.rm=TRUE)), arr_delay, dep_delay) %>%
+    head()
+```
+##### muatate columns
+
+`mutate()` is used to create new variables (columns) that are functions of existing columns. 
+
+```{r}
+flights %>%
+    select(year:day, ends_with("delay"), distance, air_time) %>%
+    mutate(gain = dep_delay - arr_delay, speed = distance/air_time * 60)
+```
+
+use `transmutate()` if you only want to keep the new variables.
+
+
+#### tidyr
+
+it helps to tidy data into an analysis ready format. the two main functions are `gather` and `spread`
+
+__`gather()`__ reshaping wide to long format
+
+```{r}
+
+wide_data <- data.frame(id = c("gene1", "gene2", "gene3", "gene4"),
+        annotation = c("m protein", "k protein", "l protein", "y protein"),
+        L4_control_A1 = rnorm(4, mean = 20, sd = 3), 
+        C6_control_A1 = rnorm(4, mean = 20, sd = 3),
+        L4_chemical_A1 = rnorm(4, mean = 20, sd = 3), 
+        C6_chemical_A1 = rnorm(4, mean = 20, sd = 3) )
+
+glimpse(wide_data)
+
+tidy_data <- wide_data %>% gather(sample, expression, L4_control_A1: C6_chemical_A1)
+tidy_data
+```
+__`spread()`__ opposite of gather
+
+```{r}
+wide2 <- spread(tidy_data, sample, expression)
+head(wide2)
+```
+__`seperate()`__ and __`extract()`__
+they are useful to split a character column into multiple columns. use __`unite()`__  to combine multiple columns into a single character column
+
+```{r}
+extracted_data <- tidy_data %>%
+                extract(sample, into=c("genotype", "treatment", "tissue", "rep"),
+                regex= "(C6|L4)_(control|chemical)_(A|B|C)(1|2|3)")
+head(extracted_data)
+```
+
+### Resources
+
+More information on tidyverse packages is availabe her [R for Data science](https://r4ds.had.co.nz/) by _Hadley Wickham_ and _Garrett Grolemund_

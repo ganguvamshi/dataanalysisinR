@@ -452,7 +452,7 @@ you can load the saved `.RData` using `load()` function. `rm()` is used to delet
 
 # To learn
 
-learn about different apply functions within R
+learn about different [apply](https://bookdown.org/csgillespie/efficientR/programming.html#the-apply-family) functions within R
 
 `apply`, `lapply`, `sapply`
 
