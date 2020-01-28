@@ -1,0 +1,33 @@
+__excercise1__
+```{r}
+gapminder %>% group_by(continent, year) %>% summary_each(numCountries = n())
+#table(gapminder$continent, gapminder$year)
+```
+
+__facet excercise__
+```{r}
+ggplot(data = gapminder,
+       mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~ continent)
+```
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+
+ggplot(data = gapminder,
+       mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth()
+
+# using facet_wrap()
+ggplot(data = gapminder,
+       mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) +
+  geom_point() +
+  geom_smooth() +
+  facet_grid(~ continent)
+
+```
+

@@ -10,7 +10,7 @@
 
 <meta name="author" content="Vamshidhar Gangu" />
 
-<meta name="date" content="2020-01-27" />
+<meta name="date" content="2020-01-28" />
 
 <title>Introduction to Tidyverse</title>
 
@@ -872,7 +872,7 @@ img {
 <div id="header">
 <h1 class="title">Introduction to Tidyverse</h1>
 <h4 class="author"><em>Vamshidhar Gangu</em></h4>
-<h4 class="date"><em>2020-01-27</em></h4>
+<h4 class="date"><em>2020-01-28</em></h4>
 </div>
 
 <div id="content">
@@ -1068,13 +1068,52 @@ data2_pass &lt;- data %&gt;%
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p><strong>Excercise 1</strong></p>
-<p>Q: Find flights that - had an arrival delay of two or more hours - were operated by United, American or Delta</p>
+<p>Q: Find flights that - had an arrival delay of two or more hours</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(arr_delay <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)</a></code></pre></div>
+<pre><code># A tibble: 123,096 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      554            558        -4      740
+ 5  2013     1     1      555            600        -5      913
+ 6  2013     1     1      558            600        -2      753
+ 7  2013     1     1      558            600        -2      924
+ 8  2013     1     1      559            600        -1      941
+ 9  2013     1     1      600            600         0      837
+10  2013     1     1      602            605        -3      821
+# ... with 123,086 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ul>
+<li>were operated by United, American or Delta</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(carrier <span class="op">==</span><span class="st"> &quot;UA&quot;</span> <span class="op">|</span><span class="st"> </span>carrier <span class="op">==</span><span class="st"> &quot;DL&quot;</span>)</a></code></pre></div>
+<pre><code># A tibble: 106,775 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      554            600        -6      812
+ 4  2013     1     1      554            558        -4      740
+ 5  2013     1     1      558            600        -2      924
+ 6  2013     1     1      558            600        -2      923
+ 7  2013     1     1      559            600        -1      854
+ 8  2013     1     1      602            610        -8      812
+ 9  2013     1     1      606            610        -4      837
+10  2013     1     1      607            607         0      858
+# ... with 106,765 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 </div>
 </div>
 <div id="arrange-rows" class="section level4">
 <h4>arrange rows</h4>
 <p><code>arrange()</code> is used to arrange the rows based on their order. it takes a dataframe and column names to be sorted.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(year, month, <span class="kw">desc</span>(day))</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(year, month, <span class="kw">desc</span>(day))</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
@@ -1093,15 +1132,15 @@ data2_pass &lt;- data %&gt;%
 #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
 #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Note: Missing Values (NA/NaN) are always sorted at the end</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="ot">NA</span>))</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="kw">arrange</span>(df, x)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="ot">NA</span>))</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">arrange</span>(df, x)</a></code></pre></div>
 <pre><code># A tibble: 3 x 1
       x
   &lt;dbl&gt;
 1     2
 2     5
 3    NA</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">arrange</span>(df, <span class="kw">desc</span>(x))</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">arrange</span>(df, <span class="kw">desc</span>(x))</a></code></pre></div>
 <pre><code># A tibble: 3 x 1
       x
   &lt;dbl&gt;
@@ -1110,12 +1149,27 @@ data2_pass &lt;- data %&gt;%
 3    NA</code></pre>
 <p><strong>Excercise 2</strong></p>
 <p>Q: select carrier and dep_delay columns from flights and sort by dep_delay</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(carrier, dep_delay) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(dep_delay)</a></code></pre></div>
+<pre><code># A tibble: 336,776 x 2
+   carrier dep_delay
+   &lt;chr&gt;       &lt;dbl&gt;
+ 1 B6            -43
+ 2 DL            -33
+ 3 EV            -32
+ 4 DL            -30
+ 5 F9            -27
+ 6 MQ            -26
+ 7 EV            -25
+ 8 MQ            -25
+ 9 9E            -24
+10 B6            -24
+# ... with 336,766 more rows</code></pre>
 <div id="grouped-summaries" class="section level5">
 <h5>grouped summaries</h5>
 <p><code>group_by()</code> changes the unit of analysis from complete dataset to individual groups. summary() is often used along with group_by to get grouped summaries</p>
 <p>Here, we calulate the mean arraival and departure delays at different origin airports</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise_each</span>(<span class="kw">funs</span>(<span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </a>
-<a class="sourceLine" id="cb25-2" title="2">    arr_delay, dep_delay) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(origin) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise_each</span>(<span class="kw">funs</span>(<span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </a>
+<a class="sourceLine" id="cb31-2" title="2">    arr_delay, dep_delay) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code># A tibble: 3 x 3
   origin arr_delay dep_delay
   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
@@ -1126,8 +1180,8 @@ data2_pass &lt;- data %&gt;%
 <div id="muatate-columns" class="section level5">
 <h5>muatate columns</h5>
 <p><code>mutate()</code> is used to create new variables (columns) that are functions of existing columns.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year<span class="op">:</span>day, <span class="kw">ends_with</span>(<span class="st">&quot;delay&quot;</span>), distance, air_time) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">gain =</span> dep_delay <span class="op">-</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-2" title="2"><span class="st">    </span>arr_delay, <span class="dt">speed =</span> distance<span class="op">/</span>air_time <span class="op">*</span><span class="st"> </span><span class="dv">60</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">flights <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(year<span class="op">:</span>day, <span class="kw">ends_with</span>(<span class="st">&quot;delay&quot;</span>), distance, air_time) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">gain =</span> dep_delay <span class="op">-</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="st">    </span>arr_delay, <span class="dt">speed =</span> distance<span class="op">/</span>air_time <span class="op">*</span><span class="st"> </span><span class="dv">60</span>)</a></code></pre></div>
 <pre><code># A tibble: 336,776 x 9
     year month   day dep_delay arr_delay distance air_time  gain speed
    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1149,63 +1203,63 @@ data2_pass &lt;- data %&gt;%
 <h4>tidyr</h4>
 <p>it helps to tidy data into an analysis ready format. the two main functions are <code>gather</code> and <code>spread</code></p>
 <p><strong><code>gather()</code></strong> reshaping wide to long format</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">wide_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">c</span>(<span class="st">&quot;gene1&quot;</span>, <span class="st">&quot;gene2&quot;</span>, <span class="st">&quot;gene3&quot;</span>, <span class="st">&quot;gene4&quot;</span>), <span class="dt">annotation =</span> <span class="kw">c</span>(<span class="st">&quot;m protein&quot;</span>, </a>
-<a class="sourceLine" id="cb29-2" title="2">    <span class="st">&quot;k protein&quot;</span>, <span class="st">&quot;l protein&quot;</span>, <span class="st">&quot;y protein&quot;</span>), <span class="dt">L4_control_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, </a>
-<a class="sourceLine" id="cb29-3" title="3">    <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">C6_control_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">L4_chemical_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, </a>
-<a class="sourceLine" id="cb29-4" title="4">    <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">C6_chemical_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb29-5" title="5"></a>
-<a class="sourceLine" id="cb29-6" title="6"><span class="kw">glimpse</span>(wide_data)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">wide_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">id =</span> <span class="kw">c</span>(<span class="st">&quot;gene1&quot;</span>, <span class="st">&quot;gene2&quot;</span>, <span class="st">&quot;gene3&quot;</span>, <span class="st">&quot;gene4&quot;</span>), <span class="dt">annotation =</span> <span class="kw">c</span>(<span class="st">&quot;m protein&quot;</span>, </a>
+<a class="sourceLine" id="cb35-2" title="2">    <span class="st">&quot;k protein&quot;</span>, <span class="st">&quot;l protein&quot;</span>, <span class="st">&quot;y protein&quot;</span>), <span class="dt">L4_control_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, </a>
+<a class="sourceLine" id="cb35-3" title="3">    <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">C6_control_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">L4_chemical_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, </a>
+<a class="sourceLine" id="cb35-4" title="4">    <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>), <span class="dt">C6_chemical_A1 =</span> <span class="kw">rnorm</span>(<span class="dv">4</span>, <span class="dt">mean =</span> <span class="dv">20</span>, <span class="dt">sd =</span> <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb35-5" title="5"></a>
+<a class="sourceLine" id="cb35-6" title="6"><span class="kw">glimpse</span>(wide_data)</a></code></pre></div>
 <pre><code>Observations: 4
 Variables: 6
 $ id             &lt;fct&gt; gene1, gene2, gene3, gene4
 $ annotation     &lt;fct&gt; m protein, k protein, l protein, y protein
-$ L4_control_A1  &lt;dbl&gt; 20.79018, 22.58306, 20.69686, 23.14280
-$ C6_control_A1  &lt;dbl&gt; 15.52289, 21.14717, 21.88161, 18.92605
-$ L4_chemical_A1 &lt;dbl&gt; 20.45968, 19.48959, 21.11872, 17.35029
-$ C6_chemical_A1 &lt;dbl&gt; 18.69055, 23.60115, 19.06784, 23.75143</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">tidy_data &lt;-<span class="st"> </span>wide_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(sample, expression, L4_control_A1<span class="op">:</span>C6_chemical_A1)</a>
-<a class="sourceLine" id="cb31-2" title="2">tidy_data</a></code></pre></div>
+$ L4_control_A1  &lt;dbl&gt; 18.61190, 21.32580, 20.95669, 25.78531
+$ C6_control_A1  &lt;dbl&gt; 18.75860, 19.77157, 16.55736, 25.52674
+$ L4_chemical_A1 &lt;dbl&gt; 20.96348, 21.94911, 20.38001, 18.44850
+$ C6_chemical_A1 &lt;dbl&gt; 16.24173, 18.60590, 17.75876, 19.26055</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">tidy_data &lt;-<span class="st"> </span>wide_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(sample, expression, L4_control_A1<span class="op">:</span>C6_chemical_A1)</a>
+<a class="sourceLine" id="cb37-2" title="2">tidy_data</a></code></pre></div>
 <pre><code>      id annotation         sample expression
-1  gene1  m protein  L4_control_A1   20.79018
-2  gene2  k protein  L4_control_A1   22.58306
-3  gene3  l protein  L4_control_A1   20.69686
-4  gene4  y protein  L4_control_A1   23.14280
-5  gene1  m protein  C6_control_A1   15.52289
-6  gene2  k protein  C6_control_A1   21.14717
-7  gene3  l protein  C6_control_A1   21.88161
-8  gene4  y protein  C6_control_A1   18.92605
-9  gene1  m protein L4_chemical_A1   20.45968
-10 gene2  k protein L4_chemical_A1   19.48959
-11 gene3  l protein L4_chemical_A1   21.11872
-12 gene4  y protein L4_chemical_A1   17.35029
-13 gene1  m protein C6_chemical_A1   18.69055
-14 gene2  k protein C6_chemical_A1   23.60115
-15 gene3  l protein C6_chemical_A1   19.06784
-16 gene4  y protein C6_chemical_A1   23.75143</code></pre>
+1  gene1  m protein  L4_control_A1   18.61190
+2  gene2  k protein  L4_control_A1   21.32580
+3  gene3  l protein  L4_control_A1   20.95669
+4  gene4  y protein  L4_control_A1   25.78531
+5  gene1  m protein  C6_control_A1   18.75860
+6  gene2  k protein  C6_control_A1   19.77157
+7  gene3  l protein  C6_control_A1   16.55736
+8  gene4  y protein  C6_control_A1   25.52674
+9  gene1  m protein L4_chemical_A1   20.96348
+10 gene2  k protein L4_chemical_A1   21.94911
+11 gene3  l protein L4_chemical_A1   20.38001
+12 gene4  y protein L4_chemical_A1   18.44850
+13 gene1  m protein C6_chemical_A1   16.24173
+14 gene2  k protein C6_chemical_A1   18.60590
+15 gene3  l protein C6_chemical_A1   17.75876
+16 gene4  y protein C6_chemical_A1   19.26055</code></pre>
 <p><strong><code>spread()</code></strong> opposite of gather</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">wide2 &lt;-<span class="st"> </span><span class="kw">spread</span>(tidy_data, sample, expression)</a>
-<a class="sourceLine" id="cb33-2" title="2"><span class="kw">head</span>(wide2)</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">wide2 &lt;-<span class="st"> </span><span class="kw">spread</span>(tidy_data, sample, expression)</a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="kw">head</span>(wide2)</a></code></pre></div>
 <pre><code>     id annotation C6_chemical_A1 C6_control_A1 L4_chemical_A1
-1 gene1  m protein       18.69055      15.52289       20.45968
-2 gene2  k protein       23.60115      21.14717       19.48959
-3 gene3  l protein       19.06784      21.88161       21.11872
-4 gene4  y protein       23.75143      18.92605       17.35029
+1 gene1  m protein       16.24173      18.75860       20.96348
+2 gene2  k protein       18.60590      19.77157       21.94911
+3 gene3  l protein       17.75876      16.55736       20.38001
+4 gene4  y protein       19.26055      25.52674       18.44850
   L4_control_A1
-1      20.79018
-2      22.58306
-3      20.69686
-4      23.14280</code></pre>
+1      18.61190
+2      21.32580
+3      20.95669
+4      25.78531</code></pre>
 <p><strong><code>seperate()</code></strong> and <strong><code>extract()</code></strong> they are useful to split a character column into multiple columns. use <strong><code>unite()</code></strong> to combine multiple columns into a single character column</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">extracted_data &lt;-<span class="st"> </span>tidy_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(sample, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;genotype&quot;</span>, <span class="st">&quot;treatment&quot;</span>, </a>
-<a class="sourceLine" id="cb35-2" title="2">    <span class="st">&quot;tissue&quot;</span>, <span class="st">&quot;rep&quot;</span>), <span class="dt">regex =</span> <span class="st">&quot;(C6|L4)_(control|chemical)_(A|B|C)(1|2|3)&quot;</span>)</a>
-<a class="sourceLine" id="cb35-3" title="3"><span class="kw">head</span>(extracted_data)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">extracted_data &lt;-<span class="st"> </span>tidy_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">extract</span>(sample, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&quot;genotype&quot;</span>, <span class="st">&quot;treatment&quot;</span>, </a>
+<a class="sourceLine" id="cb41-2" title="2">    <span class="st">&quot;tissue&quot;</span>, <span class="st">&quot;rep&quot;</span>), <span class="dt">regex =</span> <span class="st">&quot;(C6|L4)_(control|chemical)_(A|B|C)(1|2|3)&quot;</span>)</a>
+<a class="sourceLine" id="cb41-3" title="3"><span class="kw">head</span>(extracted_data)</a></code></pre></div>
 <pre><code>     id annotation genotype treatment tissue rep expression
-1 gene1  m protein       L4   control      A   1   20.79018
-2 gene2  k protein       L4   control      A   1   22.58306
-3 gene3  l protein       L4   control      A   1   20.69686
-4 gene4  y protein       L4   control      A   1   23.14280
-5 gene1  m protein       C6   control      A   1   15.52289
-6 gene2  k protein       C6   control      A   1   21.14717</code></pre>
+1 gene1  m protein       L4   control      A   1   18.61190
+2 gene2  k protein       L4   control      A   1   21.32580
+3 gene3  l protein       L4   control      A   1   20.95669
+4 gene4  y protein       L4   control      A   1   25.78531
+5 gene1  m protein       C6   control      A   1   18.75860
+6 gene2  k protein       C6   control      A   1   19.77157</code></pre>
 </div>
 </div>
 <div id="resources" class="section level3">

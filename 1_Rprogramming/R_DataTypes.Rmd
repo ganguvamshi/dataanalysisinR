@@ -28,8 +28,8 @@ opts_knit$set(width=75)
 
 ### Working Directory
 
-R typically needs a folder to store data, script and any generated plots. it also saves the history and environment by default in this **working directory**. You can get and set the working directory using `getcwd()` and `setwd()`.
-
+R typically needs a folder to store data, script and any generated plots. it also saves the history and environment by default in this **working directory**. You can get and set the working directory using `getwd()` and `setwd()`.
+  
 
 
 ### Create a new RStudio project

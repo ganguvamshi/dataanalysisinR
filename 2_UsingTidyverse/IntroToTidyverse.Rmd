@@ -174,7 +174,15 @@ __Excercise 1__
 
 Q: Find flights that 
 - had an arrival delay of two or more hours
+
+```{r}
+flights %>% filter(arr_delay>2) 
+```
+
 - were operated by United, American or Delta
+```{r}
+flights %>% filter(carrier=='UA'|carrier=='DL')
+```
 
 #### arrange rows
 
@@ -195,6 +203,10 @@ arrange(df, desc(x))
 __Excercise 2__
 
 Q: select carrier and dep_delay columns from flights and sort by dep_delay
+```{r}
+flights %>% select(carrier, dep_delay) %>% arrange(dep_delay)
+```
+
 
 ##### grouped summaries
 

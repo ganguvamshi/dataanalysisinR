@@ -1,0 +1,78 @@
+---
+title: ""
+date: "`r Sys.Date()`"
+output:
+  rmdformats::html_clean:
+    highlight: kate
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+__Task1__ : Read the titanic dataset from `/data` folder
+
+```{r, task1}
+data <- read.csv("../data/titanic.csv", header=TRUE, stringsAsFactors = F)
+str(data)
+```
+
+__Task2__ : Count total number of passangers
+
+```{r, task2}
+totPass <- nrow(data)
+cat("Total number of passangers: ", totPass,"\n")
+```
+
+__Task3__ : how many passangers are survived the sinking
+
+```{r task3}
+per_survived <- (sum(data$Survived==1)/totPass)*100
+cat("Number of survived people: ", sum(data$Survived==1), "(", round(per_survived), "%)\n")
+
+```
+
+__Task4__ : how many first class passangers who survived the sinking
+```{r task4}
+
+first_sur <- data[(data$Survived==1 & data$Pclass==1),]
+cat("Num of First class passangers survived: ", nrow(first_sur), "\n")
+
+```
+
+__Task5__ : measure the percentage of survivors for male and female
+```{r task5}
+
+female_sur_per <- sum(data$Sex=="female" & data$Survived==1)/sum(data$Sex=="female")
+male_sur_per <- sum(data$Sex=="male" & data$Survived==1)/sum(data$Sex=="male")
+
+
+cat("female survival percentage:", round(female_sur_per, digits = 2),"\n")
+cat("male survival percentage:", round(male_sur_per, digits = 2),"\n")
+```
+
+__Task6__ : Test hypothesis
+```{r task6}
+library(psych)
+mytable <- xtabs(~Survived+Sex, data=data)
+
+addmargins(mytable)
+
+chisq.test(mytable)
+
+```
+
+check [here](https://rpubs.com/mohammedkb/Titanic) for more titanic data analysis
