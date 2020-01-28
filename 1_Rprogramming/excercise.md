@@ -7,7 +7,7 @@ load the data into R and describe the columns
 ### Task3 : how many passangers are survived the sinking
 Calculate the percentage of passangers who survived 
 ### Task4 : how many first class passangers who survived the sinking
-### Task5 : measure the percentage of survivors who were female
+### Task5 : measure the percentage of survivors for male and femae
 ### Task6 : Test hypothesis (Home Work)
 hypothesis: The proportion of females onboard who survived the sinking of the Titanic was higher than the proportion of males onboard who survived the sinking
 steps:
