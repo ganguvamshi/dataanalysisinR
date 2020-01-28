@@ -70,6 +70,29 @@ The three essential components
 2. geom: the type of graphics ex: points/lines/bars etc
 3. aes: aesthetic attributes of geom object. ex. x/y position, color, shape and size
 
+### `qplot`
+
+similar to base `plot()`. It is a wrapper for creating plots using a consistent calling scheme. A simplified format of __qplot()__ is:
+
+```
+
+qplot(x, y=NULL, data, geom="auto", 
+      xlim = c(NA, NA), ylim =c(NA, NA))
+```
+- x : x values
+- y : y values (optional)
+- data : data frame to use (optional).
+- geom : Character vector specifying geom to use. Defaults to “point” if x and y are specified, and “histogram” if only x is specified.
+- xlim, ylim: x and y axis limits
+
+using qplot for some basic scatterplots
+
+```{r}
+library(tidyverse)
+data(mtcars)
+mtcars %>% wplot(mpg, wt, color = factor(cyl), geom=c("point","smooth"))
+```
+
 ### gapminder example
 
 the global economic, heath and development data from the website [gapminder.org](http://www.gapminder.org/tools/#_locale_id=en;&chart-type=bubbles). For each of 142 countries, the package provides values for life expectancy, GDP per capita, and population, every five years, from 1952 to 2007
@@ -177,6 +200,11 @@ facets display subsets of data in different panels. `facet_wrap()` tries to sens
 p + geom_point() + facet_wrap(~continent)
 p + geom_point() + facet_wrap(~continent, ncol=1)
 ```
+__Excercise__
+Q: generate seperate histogram of life expectancy for each continent
+
+Q: generate a scatterplot of relationship between per capita GDP and life expectancy. Identify whether this relationship differs by continent (using facet)
+
 
 let's do polishing with nicer axis labels and a title. we want to replace the scientific notation of x-ais with the dollar value it actually represents. the labels on the tic-marks can be controleed through `scale_` functions. we shall make use of `scales` library that contains some useful pre-made formatting functions. here we use `dollar()` function
 
